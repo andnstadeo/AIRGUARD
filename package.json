@@ -1,0 +1,24 @@
+{
+  "name": "airguard-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "vue": "^3.3.4",
+    "axios": "^1.4.0",
+    "firebase": "^10.0.0",
+    "pinia": "^2.1.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "vite": "^4.4.8",
+    "tailwindcss": "^3.3.2",
+    "postcss": "^8.4.27",
+    "autoprefixer": "^10.4.14"
+  }
+}
