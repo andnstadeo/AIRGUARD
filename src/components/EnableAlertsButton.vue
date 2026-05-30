@@ -1,10 +1,10 @@
 <template>
   <button 
     @click="enableAlerts" 
-    class="alert-btn"
+    :class="['alert-btn', compact ? 'alert-btn-compact' : '']"
     :disabled="isSubscribed"
   >
-    {{ isSubscribed ? '✅ Alerts Enabled' : '🔔 Enable Emergency Alerts' }}
+    {{ isSubscribed ? '✅ Alerts Enabled' : '🔔 Enable Alerts' }}
   </button>
 </template>
 
@@ -17,6 +17,10 @@ const props = defineProps({
   roomId: {
     type: String,
     required: true
+  },
+  compact: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -71,5 +75,12 @@ const enableAlerts = async () => {
 .alert-btn:disabled {
   background-color: #2ed573;
   cursor: default;
+}
+
+.alert-btn-compact {
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  line-height: 1;
 }
 </style>

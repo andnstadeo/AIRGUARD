@@ -15,7 +15,6 @@
       </div>
 
       <div v-else>
-        
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <SensorCard
             label="Dust Level"
@@ -51,63 +50,73 @@
           />
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <div class="lg:col-span-1">
-            <div class="card p-6 h-full">
-              <h3 class="text-lg font-semibold app-heading mb-4">Air Quality Index</h3>
-              <div class="h-64">
-                <AQIGauge :value="sensorStore.sensorData.aqi" :darkMode="isDarkMode" />
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+          <div class="xl:col-span-8 space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-6 items-start">
+              <div class="card p-5 md:p-6 h-full flex flex-col justify-between">
+                <h3 class="text-lg font-semibold app-heading mb-4">Air Quality Index</h3>
+                <div class="h-80 md:h-80 w-full flex items-center justify-center">
+                  <AQIGauge class="w-56 h-56" :value="sensorStore.sensorData.aqi" :darkMode="isDarkMode" />
+                </div>
+                <div class="mt-4 text-center">
+                  <p class="text-sm app-text mb-2">Status</p>
+                  <p :class="`inline-flex items-center px-4 py-2 rounded-full font-semibold gap-2 badge-${sensorStore.aqiStatus.color}`">
+                    {{ sensorStore.aqiStatus.icon }}
+                    {{ sensorStore.aqiStatus.status }}
+                  </p>
+                </div>
               </div>
-              <div class="mt-4 text-center">
-                <p class="text-sm app-text mb-2">Status</p>
-                <p :class="`inline-flex items-center px-4 py-2 rounded-full font-semibold gap-2 badge-${sensorStore.aqiStatus.color}`">
-                  {{ sensorStore.aqiStatus.icon }}
-                  {{ sensorStore.aqiStatus.status }}
-                </p>
+
+              <div class="card p-6 h-full flex flex-col justify-between">
+                <h3 class="text-lg font-semibold app-heading mb-4">PM2.5 Trend</h3>
+                <SimpleChart
+                  title="Live PM2.5"
+                  :chartData="sensorStore.chartData"
+                  type="line"
+                  :darkMode="isDarkMode"
+                />
               </div>
             </div>
+
           </div>
 
-          <div class="lg:col-span-2 space-y-6">
-            <SimpleChart
-              title="PM2.5 Trend"
-              :chartData="sensorStore.chartData"
-              type="line"
-              :darkMode="isDarkMode"
-            />
+          <aside class="xl:col-span-4">
+            <div class="card p-6 sticky top-6">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 class="text-lg font-semibold app-heading">System Alerts</h3>
+                    <p class="text-sm app-text-muted">Live alerts and warnings</p>
+                  </div>
+                  <EnableAlertsButton roomId="room_1" />
+                </div>
 
-            <div class="space-y-4">
-              <div class="flex items-center justify-between mt-6">
-                <h3 class="text-lg font-semibold app-heading">System Alerts</h3>
-                <EnableAlertsButton roomId="room_1" />
+                <AlertHistory
+                  :alerts="alertStore.alerts"
+                  @delete="handleDeleteAlert"
+                  @clear="handleClearAlerts"
+                />
+
+                <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <h3 class="text-lg font-semibold app-heading mb-4">Hardware Status</h3>
+                  <div class="grid grid-cols-1 gap-4">
+                    <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+                      <p class="text-sm app-text mb-2">Connected Nodes</p>
+                      <p class="text-3xl font-bold app-heading">1</p>
+                    </div>
+                    <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+                      <p class="text-sm app-text mb-2">Last Update</p>
+                      <p class="text-sm app-heading">{{ lastUpdate }}</p>
+                    </div>
+                    <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+                      <p class="text-sm app-text mb-2">Signal Strength</p>
+                      <p class="text-sm app-heading">{{ signalStrength }}%</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <AlertHistory
-                :alerts="alertStore.alerts"
-                @delete="handleDeleteAlert"
-                @clear="handleClearAlerts"
-              />
             </div>
-          </div>
-        </div>
-
-        <div class="mt-8 card p-6">
-          <h3 class="text-lg font-semibold app-heading mb-4">Hardware Status</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
-              <p class="text-sm app-text mb-2">Connected Nodes</p>
-              <p class="text-3xl font-bold app-heading">1</p>
-            </div>
-            <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
-              <p class="text-sm app-text mb-2">Last Update</p>
-              <p class="text-sm app-heading">{{ lastUpdate }}</p>
-            </div>
-            <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
-              <p class="text-sm app-text mb-2">Signal Strength</p>
-              <p class="text-sm app-heading">{{ signalStrength }}%</p>
-            </div>
-          </div>
+          </aside>
         </div>
 
       </div> </main>
