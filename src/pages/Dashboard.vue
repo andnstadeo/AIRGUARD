@@ -74,12 +74,19 @@
             :darkMode="isDarkMode"
           />
 
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold app-heading">System Alerts</h3>
+              <EnableAlertsButton roomId="room_1" />
+            </div>
+
           <!-- Alerts -->
           <AlertHistory
             :alerts="alertStore.alerts"
             @delete="handleDeleteAlert"
             @clear="handleClearAlerts"
           />
+        </div>
         </div>
       </div>
 
@@ -135,6 +142,7 @@ import AQIGauge from '@/components/AQIGauge.vue'
 import SimpleChart from '@/components/SimpleChart.vue'
 import AlertHistory from '@/components/AlertHistory.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
+import EnableAlertsButton from '@/components/EnableAlertsButton.vue'
 
 const sensorStore = useSensorStore()
 const alertStore = useAlertStore()
