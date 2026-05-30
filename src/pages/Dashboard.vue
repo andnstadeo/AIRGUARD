@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.12),_transparent_38%),linear-gradient(135deg,_#f8fafc_0%,_#eef6ff_45%,_#f8fafc_100%)] text-slate-900 transition-colors duration-300 dark:bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.18),_transparent_38%),linear-gradient(135deg,_#020617_0%,_#0f172a_50%,_#020617_100%)] dark:text-slate-100">
     <!-- Header -->
     <Header
       :isConnected="sensorStore.isConnected"
@@ -16,32 +16,32 @@
           :value="sensorStore.sensorData.dustLevel"
           unit="µg/m³"
           icon="💨"
-          status="Normal"
-          statusClass="badge-success"
+          :status="getSensorStatus('dustLevel', sensorStore.sensorData.dustLevel).label"
+          :statusClass="getSensorStatus('dustLevel', sensorStore.sensorData.dustLevel).className"
         />
         <SensorCard
           label="PM2.5"
           :value="sensorStore.sensorData.pm25"
           unit="µg/m³"
           icon="🌫️"
-          status="Normal"
-          statusClass="badge-success"
+          :status="getSensorStatus('pm25', sensorStore.sensorData.pm25).label"
+          :statusClass="getSensorStatus('pm25', sensorStore.sensorData.pm25).className"
         />
         <SensorCard
           label="Temperature"
           :value="sensorStore.sensorData.temperature"
           unit="°C"
           icon="🌡️"
-          status="Normal"
-          statusClass="badge-success"
+          :status="getSensorStatus('temperature', sensorStore.sensorData.temperature).label"
+          :statusClass="getSensorStatus('temperature', sensorStore.sensorData.temperature).className"
         />
         <SensorCard
           label="Humidity"
           :value="sensorStore.sensorData.humidity"
           unit="%"
           icon="💧"
-          status="Normal"
-          statusClass="badge-success"
+          :status="getSensorStatus('humidity', sensorStore.sensorData.humidity).label"
+          :statusClass="getSensorStatus('humidity', sensorStore.sensorData.humidity).className"
         />
       </div>
 
@@ -50,12 +50,12 @@
         <!-- AQI Gauge -->
         <div class="lg:col-span-1">
           <div class="card p-6 h-full">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Air Quality Index</h3>
+            <h3 class="text-lg font-semibold app-heading mb-4">Air Quality Index</h3>
             <div class="h-64">
-              <AQIGauge :value="sensorStore.sensorData.aqi" />
+              <AQIGauge :value="sensorStore.sensorData.aqi" :darkMode="isDarkMode" />
             </div>
             <div class="mt-4 text-center">
-              <p class="text-sm text-gray-600 mb-2">Status</p>
+              <p class="text-sm app-text mb-2">Status</p>
               <p :class="`inline-flex items-center px-4 py-2 rounded-full font-semibold gap-2 badge-${sensorStore.aqiStatus.color}`">
                 {{ sensorStore.aqiStatus.icon }}
                 {{ sensorStore.aqiStatus.status }}
@@ -71,6 +71,7 @@
             title="PM2.5 Trend"
             :chartData="sensorStore.chartData"
             type="line"
+            :darkMode="isDarkMode"
           />
 
           <!-- Alerts -->
@@ -84,23 +85,23 @@
 
       <!-- Hardware Connection Status -->
       <div class="mt-8 card p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Hardware Status</h3>
+        <h3 class="text-lg font-semibold app-heading mb-4">Hardware Status</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="p-4 border border-gray-200 rounded-lg">
-            <p class="text-sm text-gray-600 mb-2">Connected Nodes</p>
-            <p class="text-3xl font-bold text-gray-900">1</p>
+          <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+            <p class="text-sm app-text mb-2">Connected Nodes</p>
+            <p class="text-3xl font-bold app-heading">1</p>
           </div>
-          <div class="p-4 border border-gray-200 rounded-lg">
-            <p class="text-sm text-gray-600 mb-2">Last Update</p>
-            <p class="text-sm text-gray-900">{{ lastUpdate }}</p>
+          <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+            <p class="text-sm app-text mb-2">Last Update</p>
+            <p class="text-sm app-heading">{{ lastUpdate }}</p>
           </div>
-          <div class="p-4 border border-gray-200 rounded-lg">
-            <p class="text-sm text-gray-600 mb-2">Signal Strength</p>
-            <p class="text-sm text-gray-900">{{ signalStrength }}%</p>
+          <div class="p-4 border border-slate-200 rounded-xl dark:border-slate-800">
+            <p class="text-sm app-text mb-2">Signal Strength</p>
+            <p class="text-sm app-heading">{{ signalStrength }}%</p>
           </div>
         </div>
-        <div v-if="!sensorStore.isConnected" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p class="text-sm text-yellow-800">
+        <div v-if="!sensorStore.isConnected" class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 dark:bg-amber-500/10 dark:border-amber-500/20 dark:text-amber-200">
+          <p class="text-sm">
             💡 <strong>Tip:</strong> Using simulated hardware data. Connect your ESP32 node to see real sensor readings.
           </p>
         </div>
@@ -140,6 +141,7 @@ const alertStore = useAlertStore()
 const showSettings = ref(false)
 const lastUpdate = ref('Just now')
 const signalStrength = ref(95)
+const isDarkMode = ref(localStorage.getItem('darkMode') === 'true')
 let simulationInterval = null
 let statusUpdateInterval = null
 
@@ -207,8 +209,36 @@ const handleClearAlerts = () => {
   alertStore.clearAlerts()
 }
 
-const handleSaveSettings = (newThresholds) => {
-  alertStore.updateThresholds(newThresholds)
+const handleSaveSettings = (payload) => {
+  alertStore.updateThresholds(payload.thresholds)
+  isDarkMode.value = payload.darkMode
+  document.documentElement.classList.toggle('dark', payload.darkMode)
+  document.body.classList.toggle('dark', payload.darkMode)
+  localStorage.setItem('darkMode', String(payload.darkMode))
   showSettings.value = false
+}
+
+const getSensorStatus = (sensorKey, value) => {
+  const thresholds = alertStore.alertThresholds
+
+  if (sensorKey === 'temperature') {
+    if (value < thresholds.temperature.min || value > thresholds.temperature.max) {
+      return { label: 'Warning', className: 'badge-warning' }
+    }
+    return { label: 'Normal', className: 'badge-success' }
+  }
+
+  if (sensorKey === 'humidity') {
+    if (value < thresholds.humidity.min || value > thresholds.humidity.max) {
+      return { label: 'Warning', className: 'badge-warning' }
+    }
+    return { label: 'Normal', className: 'badge-success' }
+  }
+
+  if (value > thresholds[sensorKey]) {
+    return { label: 'Warning', className: 'badge-warning' }
+  }
+
+  return { label: 'Normal', className: 'badge-success' }
 }
 </script>

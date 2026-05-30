@@ -8,7 +8,32 @@
 
 body {
   @apply antialiased;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  @apply bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+:root {
+  --chart-grid: #e2e8f0;
+  --chart-line: #0ea5e9;
+  --chart-point: #0284c7;
+  --gauge-base: #e5e7eb;
+  --gauge-needle: #1f2937;
+  --gauge-center: #ffffff;
+  --gauge-center-stroke: #e5e7eb;
+  --gauge-text: #1f2937;
+  --gauge-label: #6b7280;
+}
+
+.dark {
+  --chart-grid: #334155;
+  --chart-line: #38bdf8;
+  --chart-point: #7dd3fc;
+  --gauge-base: #334155;
+  --gauge-needle: #e2e8f0;
+  --gauge-center: #0f172a;
+  --gauge-center-stroke: #334155;
+  --gauge-text: #e2e8f0;
+  --gauge-label: #94a3b8;
 }
 
 .gradient-primary {
@@ -16,7 +41,43 @@ body {
 }
 
 .card {
-  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300;
+  @apply rounded-2xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/80;
+}
+
+.surface {
+  @apply rounded-2xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70;
+}
+
+.surface-strong {
+  @apply rounded-2xl border border-slate-200 bg-white shadow-lg dark:border-slate-800 dark:bg-slate-900;
+}
+
+.app-heading {
+  @apply text-slate-900 dark:text-slate-100;
+}
+
+.app-text {
+  @apply text-slate-700 dark:text-slate-300;
+}
+
+.app-text-muted {
+  @apply text-slate-500 dark:text-slate-400;
+}
+
+.app-border {
+  @apply border-slate-200 dark:border-slate-800;
+}
+
+.input-field {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2 text-slate-900 outline-none transition focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-4 py-2 font-semibold text-white shadow-md transition hover:shadow-lg hover:brightness-110;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800;
 }
 
 .badge-success {

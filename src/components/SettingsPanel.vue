@@ -1,10 +1,10 @@
 <template>
   <div class="card p-6">
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold text-gray-900">Settings</h2>
+      <h2 class="text-2xl font-bold app-heading">Settings</h2>
       <button
         @click="$emit('close')"
-        class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+        class="text-slate-400 hover:text-slate-600 text-2xl leading-none dark:text-slate-500 dark:hover:text-slate-300"
       >
         ✕
       </button>
@@ -13,38 +13,38 @@
     <div class="space-y-6">
       <!-- Alert Thresholds -->
       <div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Alert Thresholds</h3>
+        <h3 class="text-lg font-semibold app-heading mb-4">Alert Thresholds</h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium app-text mb-2">
               Dust Level (µg/m³)
             </label>
             <input
               v-model.number="localThresholds.dustLevel"
               type="number"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              class="input-field"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium app-text mb-2">
               PM2.5 (µg/m³)
             </label>
             <input
               v-model.number="localThresholds.pm25"
               type="number"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              class="input-field"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium app-text mb-2">
               PM10 (µg/m³)
             </label>
             <input
               v-model.number="localThresholds.pm10"
               type="number"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              class="input-field"
             />
           </div>
         </div>
@@ -52,10 +52,10 @@
 
       <!-- Display Settings -->
       <div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Display</h3>
+        <h3 class="text-lg font-semibold app-heading mb-4">Display</h3>
         <label class="flex items-center gap-3 cursor-pointer">
-          <input v-model="darkMode" type="checkbox" class="rounded" />
-          <span class="text-sm text-gray-700">Dark Mode</span>
+          <input v-model="darkMode" type="checkbox" class="rounded border-slate-300 text-primary-600 focus:ring-primary-500" />
+          <span class="text-sm app-text">Dark Mode</span>
         </label>
       </div>
 
@@ -63,13 +63,13 @@
       <div class="flex gap-3 pt-4">
         <button
           @click="saveSettings"
-          class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+          class="btn-primary flex-1"
         >
           Save Changes
         </button>
         <button
           @click="$emit('close')"
-          class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+          class="btn-secondary flex-1"
         >
           Cancel
         </button>
@@ -94,7 +94,10 @@ const localThresholds = ref({ ...props.thresholds })
 const darkMode = ref(localStorage.getItem('darkMode') === 'true')
 
 const saveSettings = () => {
-  emit('save', localThresholds.value)
+  emit('save', {
+    thresholds: localThresholds.value,
+    darkMode: darkMode.value,
+  })
   localStorage.setItem('darkMode', darkMode.value)
 }
 </script>

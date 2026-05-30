@@ -1,38 +1,38 @@
 <template>
   <div class="card">
-    <div class="px-6 py-4 border-b border-gray-200">
+    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-800">Recent Alerts</h3>
+        <h3 class="text-lg font-semibold app-heading">Recent Alerts</h3>
         <button
           v-if="alerts.length > 0"
           @click="clearAllAlerts"
-          class="text-sm text-red-600 hover:text-red-800 transition-colors"
+          class="text-sm text-red-600 hover:text-red-800 transition-colors dark:text-red-400 dark:hover:text-red-300"
         >
           Clear All
         </button>
       </div>
     </div>
 
-    <div class="divide-y divide-gray-200 max-h-96 overflow-y-auto">
+    <div class="divide-y divide-slate-200 max-h-96 overflow-y-auto dark:divide-slate-800">
       <div v-if="alerts.length === 0" class="px-6 py-8 text-center">
-        <p class="text-gray-500">No alerts</p>
+        <p class="app-text-muted">No alerts</p>
       </div>
 
       <div
         v-for="alert in alerts"
         :key="alert.id"
-        class="px-6 py-4 hover:bg-gray-50 transition-colors flex items-start justify-between gap-4"
+        class="px-6 py-4 hover:bg-slate-50 transition-colors flex items-start justify-between gap-4 dark:hover:bg-slate-800/50"
       >
         <div class="flex-1">
           <div class="flex items-center gap-2 mb-1">
             <span :class="`badge-${alert.severity}`">{{ alert.severity }}</span>
-            <p class="text-sm font-medium text-gray-900">{{ alert.message }}</p>
+            <p class="text-sm font-medium app-heading">{{ alert.message }}</p>
           </div>
-          <p class="text-xs text-gray-600">{{ formatTime(alert.timestamp) }}</p>
+          <p class="text-xs app-text-muted">{{ formatTime(alert.timestamp) }}</p>
         </div>
         <button
           @click="deleteAlert(alert.id)"
-          class="text-gray-400 hover:text-red-600 transition-colors"
+          class="text-slate-400 hover:text-red-600 transition-colors dark:text-slate-500 dark:hover:text-red-400"
         >
           ✕
         </button>
