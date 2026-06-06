@@ -1,6 +1,6 @@
 # Hardware Integration Guide
 
-This guide explains how to connect your ESP32 hardware to the AIRGUARD frontend.
+This guide explains how to connect your ESP32 hardware to the AIRGUARD application.
 
 ## Hardware Setup Overview
 
@@ -21,7 +21,7 @@ This guide explains how to connect your ESP32 hardware to the AIRGUARD frontend.
 └────────┬────────┘
          │ HTTP/WebSocket
 ┌────────▼────────┐
-│   Frontend      │
+│   Application   │
 │  (This App)     │
 └─────────────────┘
 ```
@@ -35,7 +35,6 @@ This guide explains how to connect your ESP32 hardware to the AIRGUARD frontend.
 - 5V power supply
 
 ### Optional
-- OLED display
 - Buzzer
 - RGB LED
 
@@ -191,7 +190,7 @@ app.get('/api/sensors/readings', (req, res) => {
 app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 
-## Step 4: Frontend Connection
+## Step 4: Application Connection
 
 1. Update `.env.local`:
 ```env
@@ -234,7 +233,7 @@ curl -X POST http://localhost:3000/api/sensors/readings \
   -d '{"nodeId":"esp32-01","dustLevel":150,"pm25":25,...}'
 ```
 
-### Frontend not showing real data
+### App not showing real data
 - Check API URL in .env.local
 - Open browser console for errors
 - Verify backend is running
@@ -242,9 +241,9 @@ curl -X POST http://localhost:3000/api/sensors/readings \
 
 ## Testing Without Hardware
 
-The frontend includes a hardware simulator. To use it:
+The project includes a hardware simulator (part of the frontend). To use it:
 
-1. Don't modify Dashboard.vue (keep hwSimulator)
+1. Don't modify `src/pages/Dashboard.vue` (keep `hwSimulator`)
 2. Test UI and functionality
 3. When ready, switch to real API calls
 
@@ -261,7 +260,7 @@ When deploying to production:
 
 ## Next Steps
 
-1. ✅ Frontend is ready (you're here)
+1. ✅ Application frontend is ready (you're here)
 2. ⏳ Set up backend API
 3. ⏳ Flash ESP32 with firmware
 4. ⏳ Test connection

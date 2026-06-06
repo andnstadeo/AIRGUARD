@@ -1,0 +1,207 @@
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+#include <DHT.h>
+
+/* ==========================================
+ * 1. CLOUD & WIFI CONFIGURATION 
+ * ========================================== */
+const char* ssid = "";
+const char* password = "";
+
+// HiveMQ Cloud Details
+// Do NOT include "mqtts://" or the port number in the server name
+const char* mqtt_server = ""; 
+const int mqtt_port = 8883; // Secure MQTT port
+const char* mqtt_user = "";
+const char* mqtt_pass = "";
+
+// Which room is this sensor in? (Matches your backend wildcard airguard/+/sensors)
+const char* publish_topic = "";
+
+WiFiClientSecure espClient;
+PubSubClient client(espClient);
+
+/* ==========================================
+ * 2. HARDWARE & PIN DEFINITIONS
+ * ========================================== */
+const int measurePin = A0;   // Dust Sensor Analog Read
+const int ledPower = D1;     // Dust Sensor Internal LED
+const int dhtPin = D2;       // DHT11 Data Pin
+const int buzzerPin = D5;    // Buzzer Positive Pin
+const int alertLedPin = D6;  // Alert LED Anode
+
+#define DHTTYPE DHT11 
+DHT dht(dhtPin, DHTTYPE);
+
+// Dust Sensor Variables
+const int samplingTime = 280;
+const int deltaTime = 40;
+const int sleepTime = 9680;
+float voMeasured = 0;
+float calcVoltage = 0;
+float dustDensity = 0;
+
+// Timer for non-blocking publishing (every 5 seconds)
+unsigned long lastMsg = 0;
+
+/* ==========================================
+ * 3. WIFI & MQTT SETUP FUNCTIONS
+ * ========================================== */
+void setup_wifi() {
+  delay(10);
+  Serial.println();
+  Serial.print("Connecting to WiFi: ");
+  Serial.println(ssid);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\n✅ WiFi connected!");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection to HiveMQ...");
+    
+    // Create a random client ID
+    String clientId = "ESP8266Client-";
+    clientId += String(random(0xffff), HEX);
+    
+    // Attempt to connect with Username and Password
+    if (client.connect(clientId.c_str(), mqtt_user, mqtt_pass)) {
+      Serial.println("✅ Connected to Cloud!");
+    } else {
+      Serial.print("❌ Failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" trying again in 5 seconds");
+      delay(5000);
+    }
+  }
+}
+
+/* ==========================================
+ * 4. MAIN SETUP
+ * ========================================== */
+void setup() {
+  Serial.begin(115200);
+  
+  // Initialize Pins
+  pinMode(ledPower, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(alertLedPin, OUTPUT);
+  digitalWrite(alertLedPin, LOW);
+  noTone(buzzerPin); 
+
+  dht.begin();
+  
+  // Connect to WiFi and HiveMQ
+  setup_wifi();
+  
+  // THIS IS CRITICAL FOR HIVEMQ CLOUD ON ESP8266
+  // It tells the ESP to accept HiveMQ's SSL certificate without verifying it locally
+  espClient.setInsecure(); 
+  
+  client.setServer(mqtt_server, mqtt_port);
+  
+  Serial.println("System Ready. Monitoring Dust and Temperature...");
+}
+
+/* ==========================================
+ * 5. MAIN LOOP
+ * ========================================== */
+void loop() {
+  // Ensure we stay connected to MQTT
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  // Non-blocking timer: Only read and send data every 5 seconds (5000 ms)
+  unsigned long now = millis();
+  if (now - lastMsg > 5000) {
+    lastMsg = now;
+
+    // --- 1. Read Raw Dust Sensor ---
+    digitalWrite(ledPower, LOW); 
+    delayMicroseconds(samplingTime);
+    voMeasured = analogRead(measurePin); 
+    delayMicroseconds(deltaTime);
+    digitalWrite(ledPower, HIGH); 
+    delayMicroseconds(sleepTime);
+
+    calcVoltage = voMeasured * (3.3 / 1024.0);
+    dustDensity = (0.17 * calcVoltage - 0.28) * 1000;
+    if (dustDensity < 0) { dustDensity = 0.00; }
+
+    // --- 2. Calculate Fake PM & AQI Data ---
+    // Estimate PM10 (85%) and PM2.5 (40%)
+    float estimatedPm10 = dustDensity * 0.85;
+    float estimatedPm25 = dustDensity * 0.40;
+
+    // Calculate US EPA AQI based on estimated PM2.5
+    int calculatedAqi = 0;
+    if (estimatedPm25 <= 12.0) {
+      calculatedAqi = round((50.0 / 12.0) * estimatedPm25);
+    } else if (estimatedPm25 <= 35.4) {
+      calculatedAqi = round(((49.0 / 23.4) * (estimatedPm25 - 12.1)) + 51);
+    } else if (estimatedPm25 <= 55.4) {
+      calculatedAqi = round(((49.0 / 20.0) * (estimatedPm25 - 35.5)) + 101);
+    } else if (estimatedPm25 <= 150.4) {
+      calculatedAqi = round(((49.0 / 95.0) * (estimatedPm25 - 55.5)) + 151);
+    } else if (estimatedPm25 <= 250.4) {
+      calculatedAqi = round(((99.0 / 100.0) * (estimatedPm25 - 150.5)) + 201);
+    } else {
+      calculatedAqi = round(((199.0 / 249.9) * (estimatedPm25 - 250.5)) + 301);
+    }
+
+    // --- 3. Read DHT Sensor ---
+    float humidity = dht.readHumidity();
+    float temperature = dht.readTemperature(); 
+
+    if (isnan(humidity) || isnan(temperature)) {
+      Serial.println("Failed to read from DHT sensor!");
+      return;
+    }
+
+    // --- 4. Local Alarm Logic ---
+    if (dustDensity > 200.0 || temperature > 29.0) {
+      digitalWrite(alertLedPin, HIGH);  
+      tone(buzzerPin, 1000); 
+    } else {
+      digitalWrite(alertLedPin, LOW);   
+      noTone(buzzerPin);     
+    }
+
+    // --- 5. Package Data for Node.js (JSON) ---
+    // Allocate memory for the JSON document
+    StaticJsonDocument<200> doc;
+    
+    // Create the exact keys your Node.js server expects
+    doc["dustLevel"] = dustDensity;
+    doc["pm25"] = estimatedPm25;
+    doc["pm10"] = estimatedPm10;
+    doc["aqi"] = calculatedAqi;
+    doc["temperature"] = temperature;
+    doc["humidity"] = humidity;
+    // (You can add pm25 or pm10 here later if you upgrade your dust sensor)
+
+    char jsonBuffer[512];
+    serializeJson(doc, jsonBuffer);
+    
+    // --- 6. Publish to Cloud ---
+    Serial.print("Publishing to Cloud: ");
+    Serial.println(jsonBuffer);
+    
+    client.publish(publish_topic, jsonBuffer);
+  }
+}

@@ -5,8 +5,12 @@
 ```
 AIRGUARD/
 │
+├── backend/                 # Backend API (Node.js)
+│   ├── package.json         # Backend dependencies & scripts
+│   └── server.js            # Express server entrypoint
+│
 ├── 📄 Configuration Files
-│   ├── package.json           # Project dependencies & scripts
+│   ├── package.json           # Frontend dependencies & scripts
 │   ├── vite.config.js         # Vite build configuration
 │   ├── tailwind.config.js     # Tailwind CSS theme
 │   ├── postcss.config.js      # PostCSS plugins
@@ -18,43 +22,38 @@ AIRGUARD/
 ├── 📚 Documentation
 │   ├── README.md              # Main documentation
 │   ├── QUICK_START.md         # Quick reference guide
-│   ├── BACKEND_API_SPEC.md    # Backend API requirements
 │   ├── HARDWARE_INTEGRATION.md # Hardware setup guide
 │   └── PROJECT_STRUCTURE.md   # This file
 │
-├── 🔧 Scripts
-│   ├── setup.bat              # Windows setup script
-│   └── setup.sh               # macOS/Linux setup script
-│
 └── 📦 src/
-    ├── main.js                # Application entry point
-    ├── App.vue                # Root component
-    │
-    ├── 🎨 components/         # Reusable Vue components
-    │   ├── Header.vue         # Top navigation bar
-    │   ├── AQIGauge.vue       # AQI circular gauge
-    │   ├── SensorCard.vue     # Sensor data display card
-    │   ├── SimpleChart.vue    # Chart component
-    │   ├── AlertHistory.vue   # Alert list panel
-    │   └── SettingsPanel.vue  # Settings/configuration panel
-    │
-    ├── 📄 pages/              # Full page components
-    │   ├── Dashboard.vue      # Main dashboard page
-    │   └── Login.vue          # Authentication page
-    │
-    ├── 💾 stores/             # Pinia state management
-    │   ├── sensorStore.js     # Sensor data state
-    │   └── alertStore.js      # Alert management state
-    │
-    ├── 🔌 services/           # API & external services
-    │   ├── api.js             # Backend API client
-    │   ├── firebase.js        # Firebase configuration
-    │   └── hardwareSimulator.js # Mock hardware data
-    │
-    ├── 🎨 styles/            # Global styles
-    │   └── index.css          # TailwindCSS & custom CSS
-    │
-    └── 🎯 utils/              # Utility functions (ready for expansion)
+   ├── main.js                # Application entry point
+   ├── App.vue                # Root component
+   │
+   ├── 🎨 components/         # Reusable Vue components
+   │   ├── Header.vue         # Top navigation bar
+   │   ├── AQIGauge.vue       # AQI circular gauge
+   │   ├── SensorCard.vue     # Sensor data display card
+   │   ├── SimpleChart.vue    # Chart component
+   │   ├── AlertHistory.vue   # Alert list panel
+   │   └── SettingsPanel.vue  # Settings/configuration panel
+   │
+   ├── 📄 pages/              # Full page components
+   │   ├── Dashboard.vue      # Main dashboard page
+   │   └── Login.vue          # Authentication page
+   │
+   ├── 💾 stores/             # Pinia state management
+   │   ├── sensorStore.js     # Sensor data state
+   │   └── alertStore.js      # Alert management state
+   │
+   ├── 🔌 services/           # API & external services
+   │   ├── api.js             # Backend API client
+   │   ├── firebase.js        # Firebase configuration
+   │   └── hardwareSimulator.js # Mock hardware data
+   │
+   ├── 🎨 styles/            # Global styles
+   │   └── index.css          # TailwindCSS & custom CSS
+   │
+   └── 🎯 utils/              # Utility functions (ready for expansion)
 ```
 
 ## Component Communication Flow

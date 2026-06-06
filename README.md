@@ -1,26 +1,18 @@
 # AIRGUARD - IoT-Based Dust Level Monitoring System
 
-A modern, beautiful web dashboard for real-time indoor air quality monitoring. Built with Vue.js 3, Vite, and TailwindCSS.
+A web dashboard for real-time indoor air quality monitoring. Built with Vue.js 3, Vite, and TailwindCSS.
 
 ## 📋 Project Overview
 
-AIRGUARD is a comprehensive IoT solution for monitoring indoor air quality through dust level sensors. This repository contains the **frontend** application, which provides:
+AIRGUARD is a comprehensive IoT solution for monitoring indoor air quality through dust level sensors. 
 
 - 🎯 Real-time AQI (Air Quality Index) gauge
 - 📊 Live sensor data visualization
 - 📈 Historical data charts
 - 🚨 Smart alert management
 - 🔔 Threshold-based notifications
-- 🎨 Beautiful, responsive UI
+- 🎨 Responsive UI
 - 🔐 Firebase authentication support
-
-## 🎯 Current Status
-
-✅ **Frontend**: Complete and fully functional (this project)
-⏳ **Backend API**: Ready for integration (not required to start)
-⏳ **Hardware**: Using simulated data for demo/testing
-
-The frontend comes with a **hardware simulator** so you can start testing immediately without physical hardware!
 
 ---
 
@@ -114,7 +106,7 @@ The browser will **automatically open** at `http://localhost:5173/`
 
 ### Step 5: Login to Dashboard
 
-**Demo Credentials** (No backend needed):
+**Demo Credentials**:
 ```
 Email: demo@airguard.com
 Password: demo1234
@@ -191,8 +183,11 @@ VITE_FIREBASE_PROJECT_ID=your_project_id
 
 ```
 AIRGUARD/
+├── backend/                 # Backend API (Node.js)
+│   ├── package.json         # Backend dependencies & scripts
+│   └── server.js            # Simple Express server entrypoint
 ├── src/
-│   ├── components/           # Reusable Vue components (6 files)
+│   ├── components/          # Reusable Vue components (6 files)
 │   ├── pages/               # Full page components (2 files)
 │   ├── stores/              # Pinia state management (3 files)
 │   ├── services/            # API clients & services (3 files)
@@ -201,8 +196,8 @@ AIRGUARD/
 │   └── main.js              # Entry point
 ├── public/                  # Static assets
 ├── index.html               # HTML template
-├── package.json             # Dependencies
-├── vite.config.js          # Build configuration
+├── package.json             # Frontend dependencies (see `backend/package.json` for backend)
+├── vite.config.js           # Build configuration
 ├── tailwind.config.js      # CSS configuration
 └── postcss.config.js       # CSS processing
 ```
@@ -274,7 +269,7 @@ npm run dev
 
 ### Current Implementation (Simulated Data)
 
-The frontend comes with a built-in hardware simulator that generates realistic sensor data. Perfect for:
+The project includes a built-in hardware simulator that generates realistic sensor data. Perfect for:
 - UI/UX testing
 - Demo purposes
 - Development without hardware
@@ -296,7 +291,7 @@ When you have your hardware ready, see `HARDWARE_INTEGRATION.md` for:
 ✅ Alert management
 ✅ Settings configuration
 ✅ Responsive design
-✅ Demo authentication (no backend required)
+✅ Demo authentication
 
 ---
 
@@ -306,7 +301,6 @@ When you have your hardware ready, see `HARDWARE_INTEGRATION.md` for:
 |----------|---------|
 | [QUICK_START.md](QUICK_START.md) | Quick reference |
 | [HARDWARE_INTEGRATION.md](HARDWARE_INTEGRATION.md) | Hardware setup |
-| [BACKEND_API_SPEC.md](BACKEND_API_SPEC.md) | API requirements |
 | [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) | Code organization |
 | [GETTING_STARTED.md](GETTING_STARTED.md) | First-time setup |
 
@@ -368,15 +362,7 @@ For issues:
 
 ## 📝 License
 
-Project for Group 3, Section 4-6
-
----
-
-## 👥 Team
-
-- **Frontend**: Salil, Tadeo
-- **Backend**: [Your team members]
-- **Hardware**: [Your team members]
+Project of Group 3, Section 4-6
 
 ---
 

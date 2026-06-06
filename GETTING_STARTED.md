@@ -1,41 +1,38 @@
 # ⚡ AIRGUARD - Get Started in 5 Minutes
 
-## 🎯 Option 1: Quickest Way (Windows)
+## 🎯 Quick Start (Windows / macOS / Linux)
 
-### Step 1: Open Command Prompt
-Press `Win + R`, type `cmd`, and press Enter
+### Step 1: Open a terminal
 
-### Step 2: Navigate to Project
-```cmd
+### Step 2: Navigate to the project folder
+```bash
 cd "C:\Users\Denise\Desktop\New folder\AIRGUARD"
+# or on macOS/Linux: cd ~/Desktop/"New folder"/AIRGUARD
 ```
 
-### Step 3: Run Setup
-```cmd
-setup.bat
+### Step 3: Install and run
+```bash
+npm install
+npm run dev
 ```
 
-Done! Your browser should open automatically to the dashboard.
+Open http://localhost:5173 in your browser when the dev server starts.
 
 ---
 
-## 🐧 Option 2: macOS/Linux
+## 🐧 Alternative (macOS / Linux)
 
-### Step 1: Open Terminal
+### Step 1: Open Terminal and navigate to the project
 
-### Step 2: Navigate to Project
 ```bash
 cd ~/Desktop/"New folder"/AIRGUARD
 ```
 
-### Step 3: Make Setup Executable
-```bash
-chmod +x setup.sh
-```
+### Step 2: Install and run
 
-### Step 4: Run Setup
 ```bash
-./setup.sh
+npm install
+npm run dev
 ```
 
 ---
@@ -85,12 +82,12 @@ Or click **"Demo Login"** button
 │  🛡️ AIRGUARD | Connected | Settings ⚙️         │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│  📊 Dust Level  🌫️ PM2.5  🌡️ Temperature  💧 RH│
-│   150 µg/m³     25 µg/m³      22°C         45% │
+│  📊 Dust Level  🌫️ PM2.5  🌡️ Temperature 💧 RH│
+│   150 µg/m³     25 µg/m³      22°C          45% │
 │                                                 │
-│  ┌─────────────────┬────────────────────────┐  │
+│  ┌─────────────────┬────────────────────────┐   │
 │  │   AQI Gauge     │   PM2.5 Trend Chart    │  │
-│  │       85        │   [████████████]       │  │
+│  │       85        │   [████████████]       │   │
 │  │  Moderate ⚠️    │   Recent Alerts        │  │
 │  └─────────────────┴────────────────────────┘  │
 │                                                 │

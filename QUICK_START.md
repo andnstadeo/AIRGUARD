@@ -1,8 +1,12 @@
-# AIRGUARD Frontend - Quick Reference
+# AIRGUARD - Quick Reference
 
 ## 🚀 Start Development
 
 ```bash
+# Install dependencies (first time only)
+npm install
+
+# Start dev server
 npm run dev
 ```
 
@@ -114,7 +118,7 @@ Press `F12` to open developer tools:
 ## 📚 Documentation
 
 - [Main README](README.md)
-- [Backend API Spec](BACKEND_API_SPEC.md)
+- Backend API: see the `backend/` folder or `HARDWARE_INTEGRATION.md`
 - [Hardware Integration](HARDWARE_INTEGRATION.md)
 - [Vue.js Docs](https://vuejs.org)
 
